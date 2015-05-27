@@ -2,5 +2,5 @@ package morphy.base;
 
 import org.morphy.$S;
 
-public class Root extends $S {
+public class Root implements $S {
 }

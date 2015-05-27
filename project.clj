@@ -1,6 +1,6 @@
-(defproject backend "0.1.0"
-  :description "caiyunapp.com"
-  :url "http://caiyunapp.com"
+(defproject morphy "0.1.0"
+  :description "morphy"
+  :url "http://morphy.org"
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
 
@@ -24,6 +24,7 @@
                  [com.climate/claypoole "1.0.0"]
                  [org.clojure/data.codec "0.1.0"]
                  [org.apache.commons/commons-math3 "3.4.1"]
+                 [org.jkee.gtree/gtree "0.66"]
                  [org.clojure/tools.logging "0.3.1"]
                  [org.slf4j/slf4j-api "1.7.12"]
                  [org.slf4j/slf4j-log4j12 "1.7.12"]
@@ -32,7 +33,7 @@
                  [expectations "2.0.9"]]
 
   :jvm-opts ["-Xms1g" "-Xmx1g" "-server"]
-  :javac-options ["-target" "1.7" "-source" "1.7" "-Xlint:-options"]
+  :javac-options ["-target" "1.8" "-source" "1.8" "-Xlint:-options"]
   :omit-source true
 
   :source-paths ["src"]
