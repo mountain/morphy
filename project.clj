@@ -37,7 +37,7 @@
   :omit-source true
 
   :source-paths ["src"]
-  :java-source-paths ["base" "lib" "db"]
+  :java-source-paths ["base" "lib" "db" "app"]
 
   :test-paths ["test"]
   :junit ["junit"]
