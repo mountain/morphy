@@ -8,15 +8,7 @@
   :plugins      [[lein-expectations "0.0.7"]
                  [lein-junit "1.1.8"]]
 
-  :dependencies [[org.clojure/clojure "1.7.0-RC1"]
-                 [http-kit "2.1.19"]
-                 [ring "1.3.2"]
-                 [compojure "1.3.3"]
-                 [ring/ring-defaults "0.1.4"]
-                 [ring/ring-headers "0.1.2"]
-                 [ring/ring-codec "1.0.0"]
-                 [ring/ring-json "0.3.1"]
-                 [ring.middleware.jsonp "0.1.6"]
+  :dependencies [[org.clojure/clojure "1.7.0"]
                  [net.mikera/vectorz-clj "0.29.0"]
                  [net.mikera/vectorz "0.46.0"]
                  [net.mikera/core.matrix "0.34.0"]
@@ -29,10 +21,12 @@
                  [org.slf4j/slf4j-api "1.7.12"]
                  [org.slf4j/slf4j-log4j12 "1.7.12"]
                  [log4j/log4j "1.2.17"]
-                 [junit/junit "4.12"]
-                 [expectations "2.0.9"]]
+                 [org.lwjgl/lwjgl "3.0.0a"]
+                 [org.lwjgl/lwjgl-platform "3.0.0a"
+                  :classifier "natives-osx"
+                  :native-prefix ""]]
 
-  :jvm-opts ["-Xms1g" "-Xmx1g" "-server"]
+  :jvm-opts ["-Xms1g" "-Xmx1g" "-XstartOnFirstThread"]
   :javac-options ["-target" "1.8" "-source" "1.8" "-Xlint:-options"]
   :omit-source true
 
@@ -46,4 +40,4 @@
   :uberjar-name "morphy-standalone.jar"
 
   :aot :all
-  :main morphy.main)
+  :main morphy.app.Plant3DMain)
