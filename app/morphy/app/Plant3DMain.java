@@ -1,14 +1,19 @@
 package morphy.app;
 
+import org.apache.commons.io.IOUtils;
 import org.lwjgl.Sys;
 import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.*;
 
+import java.io.StringWriter;
 import java.nio.ByteBuffer;
+import java.nio.DoubleBuffer;
 
 import static org.lwjgl.glfw.Callbacks.*;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL20.*;
+import static org.lwjgl.BufferUtils.*;
 import static org.lwjgl.system.MemoryUtil.*;
 
 public class Plant3DMain {
@@ -19,6 +24,16 @@ public class Plant3DMain {
 
     // The window handle
     private long window;
+
+    private String source(String path) {
+        StringWriter writer = new StringWriter();
+        try {
+            IOUtils.copy(this.getClass().getResourceAsStream(path), writer, "utf-8");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return writer.toString();
+    }
 
     public void run() {
         System.out.println("Hello LWJGL " + Sys.getVersion() + "!");
@@ -38,6 +53,7 @@ public class Plant3DMain {
     }
 
     private void init() {
+
         // Setup an error callback. The default implementation
         // will print the error message in System.err.
         glfwSetErrorCallback(errorCallback = errorCallbackPrint(System.err));
@@ -50,7 +66,6 @@ public class Plant3DMain {
         glfwDefaultWindowHints(); // optional, the current window hints are already the default
         glfwWindowHint(GLFW_VISIBLE, GL_FALSE); // the window will stay hidden after creation
         glfwWindowHint(GLFW_RESIZABLE, GL_TRUE); // the window will be resizable
-
         int WIDTH = 300;
         int HEIGHT = 300;
 
@@ -95,12 +110,53 @@ public class Plant3DMain {
         GLContext.createFromCurrent();
 
         // Set the clear color
-        glClearColor(1.0f, 0.0f, 0.0f, 0.0f);
+        glClearColor(0.0f, 0.0f, 0.4f, 0.0f);
+
+        int progId = glCreateProgram();
+        int vShader = glCreateShader(GL_VERTEX_SHADER);
+        int fShader = glCreateShader(GL_FRAGMENT_SHADER);
+
+        glShaderSource(vShader, source("SimpleVertexShader.glsl"));
+        glShaderSource(fShader, source("SimpleFragmentShader.glsl"));
+
+        glCompileShader(vShader);
+        glCompileShader(fShader);
+        glAttachShader(progId, vShader);
+        glAttachShader(progId, fShader);
+        glLinkProgram(progId);
+
+        System.out.println(glGetShaderInfoLog(vShader));
+        System.out.println(glGetShaderInfoLog(fShader));
+
+        glDeleteShader(vShader);
+        glDeleteShader(fShader);
+
+        DoubleBuffer vertexes = createDoubleBuffer(9);
+        vertexes.put(new double[]{
+                -1, -1, 1,
+                1, -1, 1,
+                0, 1, 1,
+        });
+        vertexes.flip();
+        glVertex3dv(vertexes);
 
         // Run the rendering loop until the user has attempted to close
         // the window or has pressed the ESCAPE key.
-        while ( glfwWindowShouldClose(window) == GL_FALSE ) {
+        while (glfwWindowShouldClose(window) == GL_FALSE) {
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
+
+            glUseProgram(progId);
+
+            glEnableVertexAttribArray(0);
+            glVertexAttribPointer(
+                    3,                  // size
+                    GL_DOUBLE,          // type
+                    false,              // normalized?
+                    0,                  // stride
+                    vertexes            // buffer
+            );
+            glDrawArrays(GL_TRIANGLES, 0, 3);
+            glDisableVertexAttribArray(0);
 
             glfwSwapBuffers(window); // swap the color buffers
 

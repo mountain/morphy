@@ -15,6 +15,7 @@
                  [net.mikera/imagez "0.5.0"]
                  [com.climate/claypoole "1.0.0"]
                  [org.clojure/data.codec "0.1.0"]
+                 [commons-io/commons-io "2.4"]
                  [org.apache.commons/commons-math3 "3.4.1"]
                  [org.jkee.gtree/gtree "0.66"]
                  [org.clojure/tools.logging "0.3.1"]
