@@ -12,6 +12,7 @@ import java.nio.DoubleBuffer;
 import static org.lwjgl.glfw.Callbacks.*;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL15.*;
 import static org.lwjgl.opengl.GL20.*;
 import static org.lwjgl.BufferUtils.*;
 import static org.lwjgl.system.MemoryUtil.*;
@@ -138,7 +139,15 @@ public class Plant3DMain {
                 0, 1, 1,
         });
         vertexes.flip();
-        glVertex3dv(vertexes);
+
+        int vaoId = glGenBuffers();
+        glBindBuffer(GL_VERTEX_ARRAY_BUFFER_BINDING, vaoId);
+        int vboId = glGenBuffers();
+        glBindBuffer(GL_ARRAY_BUFFER, vboId);
+        glBufferData(GL_ARRAY_BUFFER, vertexes, GL_STATIC_DRAW);
+        glVertexAttribPointer(0, 3, GL_DOUBLE, false, 0, 0);
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
+        glBindBuffer(GL_VERTEX_ARRAY_BUFFER_BINDING, 0);
 
         // Run the rendering loop until the user has attempted to close
         // the window or has pressed the ESCAPE key.
@@ -147,16 +156,11 @@ public class Plant3DMain {
 
             glUseProgram(progId);
 
+            glBindBuffer(GL_VERTEX_ARRAY_BUFFER_BINDING, vaoId);
             glEnableVertexAttribArray(0);
-            glVertexAttribPointer(
-                    3,                  // size
-                    GL_DOUBLE,          // type
-                    false,              // normalized?
-                    0,                  // stride
-                    vertexes            // buffer
-            );
             glDrawArrays(GL_TRIANGLES, 0, 3);
             glDisableVertexAttribArray(0);
+            glBindBuffer(GL_VERTEX_ARRAY_BUFFER_BINDING, 0);
 
             glfwSwapBuffers(window); // swap the color buffers
 
