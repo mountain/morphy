@@ -1,6 +1,12 @@
 package morphy.app;
 
+import com.hackoeur.jglm.Mat4;
+import com.hackoeur.jglm.Matrices;
+import com.hackoeur.jglm.Vec3;
+import com.jhlabs.vecmath.Matrix4f;
+import com.jhlabs.vecmath.Vector3f;
 import org.apache.commons.io.IOUtils;
+import org.lwjgl.BufferUtils;
 import org.lwjgl.Sys;
 import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.*;
@@ -8,6 +14,7 @@ import org.lwjgl.opengl.*;
 import java.io.StringWriter;
 import java.nio.ByteBuffer;
 import java.nio.DoubleBuffer;
+import java.nio.FloatBuffer;
 
 import static org.lwjgl.glfw.Callbacks.*;
 import static org.lwjgl.glfw.GLFW.*;
@@ -96,7 +103,7 @@ public class Plant3DMain {
         // Make the OpenGL context current
         glfwMakeContextCurrent(window);
         // Enable v-sync
-        glfwSwapInterval(1);
+        glfwSwapInterval(60);
 
         // Make the window visible
         glfwShowWindow(window);
@@ -114,40 +121,62 @@ public class Plant3DMain {
         glClearColor(0.0f, 0.0f, 0.4f, 0.0f);
 
         int progId = glCreateProgram();
+
         int vShader = glCreateShader(GL_VERTEX_SHADER);
         int fShader = glCreateShader(GL_FRAGMENT_SHADER);
-
         glShaderSource(vShader, source("SimpleVertexShader.glsl"));
         glShaderSource(fShader, source("SimpleFragmentShader.glsl"));
-
         glCompileShader(vShader);
         glCompileShader(fShader);
         glAttachShader(progId, vShader);
         glAttachShader(progId, fShader);
         glLinkProgram(progId);
-
+        glValidateProgram(progId);
         System.out.println(glGetShaderInfoLog(vShader));
         System.out.println(glGetShaderInfoLog(fShader));
-
         glDeleteShader(vShader);
         glDeleteShader(fShader);
 
-        DoubleBuffer vertexes = createDoubleBuffer(9);
-        vertexes.put(new double[]{
-                -1, -1, 1,
-                1, -1, 1,
-                0, 1, 1,
+        FloatBuffer vertexes = createFloatBuffer(9);
+        vertexes.put(new float[]{
+                -1, -1, 0,
+                1, -1, 0,
+                0, 1, 0,
         });
         vertexes.flip();
+
+        Mat4 projection = Matrices.perspective(45.0f, 4.0f / 3.0f, 0.1f, 100.0f);
+        Mat4 view = Matrices.lookAt(
+                new Vec3(4, 3, 3),// Camera is at (4,3,3), in World Space
+                new Vec3(0,0,0),  // and looks at the origin
+                new Vec3(0,-1,0)); // Head is up (set to 0,-1,0 to look upside-down)
+        Mat4 model = new Mat4(1.0f);// Changes for each model !
+        Mat4 transform = projection.multiply(view).multiply(model);
+
+        FloatBuffer transBuffer = transform.getBuffer();
+        transBuffer.flip().limit(transBuffer.capacity());
+        FloatBuffer floatBuffer = ByteBuffer.allocateDirect (16 * 4).asFloatBuffer();
+        floatBuffer.put(transBuffer);
+        floatBuffer.flip().limit(floatBuffer.capacity());
+        ByteBuffer byteBuffer = (ByteBuffer) ((sun.nio.ch.DirectBuffer)floatBuffer).attachment();
+        byteBuffer.flip().limit(byteBuffer.capacity());
+
+        //int transId = glGetUniformLocation(progId, "transform");
+        //glUniformMatrix4fv(transId, false, floatBuffer);
+
+        glUseProgram(progId);
 
         int vaoId = glGenBuffers();
         glBindBuffer(GL_VERTEX_ARRAY_BUFFER_BINDING, vaoId);
         int vboId = glGenBuffers();
         glBindBuffer(GL_ARRAY_BUFFER, vboId);
         glBufferData(GL_ARRAY_BUFFER, vertexes, GL_STATIC_DRAW);
-        glVertexAttribPointer(0, 3, GL_DOUBLE, false, 0, 0);
+        glVertexAttribPointer(0, 3, GL_FLOAT, false, 0, 0);
+        glBufferData(GL_PROJECTION_MATRIX, floatBuffer, GL_STATIC_DRAW);
         glBindBuffer(GL_ARRAY_BUFFER, 0);
         glBindBuffer(GL_VERTEX_ARRAY_BUFFER_BINDING, 0);
+
+        glUseProgram(0);
 
         // Run the rendering loop until the user has attempted to close
         // the window or has pressed the ESCAPE key.
@@ -161,6 +190,8 @@ public class Plant3DMain {
             glDrawArrays(GL_TRIANGLES, 0, 3);
             glDisableVertexAttribArray(0);
             glBindBuffer(GL_VERTEX_ARRAY_BUFFER_BINDING, 0);
+
+            glUseProgram(0);
 
             glfwSwapBuffers(window); // swap the color buffers
 

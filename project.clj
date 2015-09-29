@@ -22,6 +22,7 @@
                  [org.slf4j/slf4j-api "1.7.12"]
                  [org.slf4j/slf4j-log4j12 "1.7.12"]
                  [log4j/log4j "1.2.17"]
+                 [com.hackoeur/jglm "1.0.0"]
                  [org.lwjgl/lwjgl "3.0.0a"]
                  [org.lwjgl/lwjgl-platform "3.0.0a"
                   :classifier "natives-osx"
