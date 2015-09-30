@@ -9,10 +9,9 @@
                  [lein-junit "1.1.8"]]
 
   :dependencies [[org.clojure/clojure "1.7.0"]
-                 [net.mikera/vectorz-clj "0.29.0"]
-                 [net.mikera/vectorz "0.46.0"]
-                 [net.mikera/core.matrix "0.34.0"]
-                 [net.mikera/imagez "0.5.0"]
+                 [net.mikera/vectorz-clj "0.35.0"]
+                 [net.mikera/core.matrix "0.41.0"]
+                 [net.mikera/imagez "0.8.0"]
                  [com.climate/claypoole "1.0.0"]
                  [org.clojure/data.codec "0.1.0"]
                  [commons-io/commons-io "2.4"]
@@ -22,7 +21,6 @@
                  [org.slf4j/slf4j-api "1.7.12"]
                  [org.slf4j/slf4j-log4j12 "1.7.12"]
                  [log4j/log4j "1.2.17"]
-                 [com.hackoeur/jglm "1.0.0"]
                  [org.lwjgl/lwjgl "3.0.0a"]
                  [org.lwjgl/lwjgl-platform "3.0.0a"
                   :classifier "natives-osx"
