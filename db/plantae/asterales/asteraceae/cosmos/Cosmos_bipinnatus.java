@@ -9,12 +9,12 @@ import org.morphy.anno.Rule;
 import org.morphy.anno.Start;
 import org.morphy.anno.Terminative;
 
-import morphy.base.leaves.Subulate;
+import morphy.base.leaves.Pinnatisect;
 
 public class Cosmos_bipinnatus extends $L {
 
     @Terminative
-    public Leaf leaf = $(Subulate.class);
+    public Leaf leaf = $(Pinnatisect.class);
 
     @Generative
     public Root root = $(Root.class);
