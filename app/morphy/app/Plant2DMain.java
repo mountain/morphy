@@ -2,7 +2,7 @@ package morphy.app;
 
 import org.morphy.$I;
 import org.morphy.$L;
-import plantae.asterales.asteraceae.cosmos.Bipinnatus;
+import plantae.asterales.asteraceae.cosmos.Cosmos_bipinnatus;
 
 import javax.swing.*;
 import java.awt.*;
@@ -40,7 +40,7 @@ public class Plant2DMain {
     }
 
     public static void main(String[] args) {
-        $L lsys = new Bipinnatus();
+        $L lsys = new Cosmos_bipinnatus();
         viewer.seed(lsys);
         javax.swing.SwingUtilities.invokeLater(new Runnable() {
             public void run() {
