@@ -17,6 +17,7 @@ public class Leaf implements $S {
                 double x = get("x0");
                 double y = get("y0");
                 double alpha = get("alpha0");
+
                 g.setColor(Color.GREEN);
                 g2.translate(x, y);
                 g2.rotate(-alpha);

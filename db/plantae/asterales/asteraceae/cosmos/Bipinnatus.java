@@ -9,10 +9,12 @@ import org.morphy.anno.Rule;
 import org.morphy.anno.Start;
 import org.morphy.anno.Terminative;
 
+import morphy.base.leaves.Obovate;
+
 public class Bipinnatus extends $L {
 
     @Terminative
-    public Leaf leaf = $(Leaf.class);
+    public Leaf leaf = $(Obovate.class);
 
     @Generative
     public Root root = $(Root.class);
@@ -26,10 +28,10 @@ public class Bipinnatus extends $L {
     @Generative
     public Tip tip = $(Tip.class);
 
-    @Rule({43, 21, 2, -23, -43})
+    @Rule(value = {43, 21, 2, -23, -43})
     public $R<Bud> rule1 = ($I<Bud> one) -> $i(leaf, stem, stem, stem, leaf);
 
-    @Rule({31, 37, -3, -31, -27})
+    @Rule({31, 37, -3, -31})
     public $R<Bud> rule2 = ($I<Bud> one) -> $i(leaf, stem, stem, leaf);
 
     @Rule({31, -3, -27})

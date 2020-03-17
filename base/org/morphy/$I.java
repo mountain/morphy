@@ -40,7 +40,7 @@ public abstract class $I<T extends $S> {
             this.setSymbol("Null");
             this.set("alpha", 0.0);
             this.set("ratio", 1.0);
-            this.set("length", 48);
+            this.set("length", 72);
         }
 
         @Override
